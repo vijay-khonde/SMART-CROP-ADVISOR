@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌾 Smart Crop Planner for Indian Farmers</title>
+<link rel="stylesheet" href="seasonshedule.css">
+</head>
+<body>
+
+<header>
+  🌾 Smart Crop Planner for Indian Farmers
+</header>
+
+<main>
+  <div class="card">
+    <h2 style="font-size:26px; margin-bottom:20px;">Enter Your Details</h2>
+    
+    <label for="region">Location / Region:</label>
+    <select id="region">
+      <option value="">Select</option>
+      <option value="north">North India</option>
+      <option value="south">South India</option>
+      <option value="east">East India</option>
+      <option value="west">West India</option>
+    </select>
+    
+    <label for="season">Season:</label>
+    <select id="season">
+      <option value="">Select</option>
+      <option value="kharif">Kharif (Jun-Oct)</option>
+      <option value="rabi">Rabi (Nov-Mar)</option>
+      <option value="zaid">Zaid (Apr-May)</option>
+    </select>
+
+    <button onclick="generateSchedule()">Get Full Crop Plan</button>
+  </div>
+
+  <div class="card" id="scheduleCard">
+    <h2 style="font-size:26px;">Detailed Crop Schedule & Rotation Plan</h2>
+    <div class="table-container">
+      <table id="scheduleTable">
+        <thead>
+          <tr>
+            <th>Crop</th>
+            <th>Variety</th>
+            <th>Sowing Month</th>
+            <th>Harvest Month</th>
+            <th>Spacing</th>
+            <th>Fertilizer</th>
+            <th>Irrigation</th>
+            <th>Rotation / Reminder</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- JS will fill schedule -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<script src="seasonschedule.js"></script>
+</body>
+</html>

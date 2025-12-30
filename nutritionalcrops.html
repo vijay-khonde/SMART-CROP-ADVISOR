@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Smart Crop Advisor | Animated Crop Nutrition</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+    margin:0;
+    font-family:Segoe UI, Arial, sans-serif;
+    background:linear-gradient(120deg,#fffde7,#e0f2f1);
+}
+.container{
+    max-width:1100px;
+    margin:50px auto;
+    padding:20px;
+}
+h1{
+    text-align:center;
+    color:#00695c;
+    font-size:36px;
+    margin-bottom:40px;
+}
+.crop-list{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:25px;
+}
+.crop-card{
+    width:240px;
+    padding:25px;
+    text-align:center;
+    background:linear-gradient(145deg,#ffffff,#b2dfdb);
+    border-radius:18px;
+    border:2px solid #00796b;
+    box-shadow:0 10px 25px rgba(0,0,0,0.15);
+    cursor:pointer;
+    transition:0.3s ease;
+    animation:float 3s ease-in-out infinite;
+}
+.crop-card:hover{
+    transform:scale(1.08);
+}
+.crop-icon{
+    width:90px;
+    height:90px;
+    margin:0 auto 15px;
+    border-radius:50%;
+    background:#00796b;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:42px;
+    color:white;
+    animation:pulse 2s infinite;
+}
+@keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(0,121,107,0.7);}
+    70%{box-shadow:0 0 0 20px rgba(0,121,107,0);}
+    100%{box-shadow:0 0 0 0 rgba(0,121,107,0);}
+}
+@keyframes float{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-6px);}
+}
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.7);
+}
+.modal-content{
+    background:#e0f2f1;
+    max-width:650px;
+    margin:80px auto;
+    padding:30px;
+    border-radius:20px;
+    position:relative;
+    animation:zoom 0.4s ease;
+}
+@keyframes zoom{
+    from{transform:scale(0.7);opacity:0;}
+    to{transform:scale(1);opacity:1;}
+}
+.close{
+    position:absolute;
+    top:15px;
+    right:20px;
+    font-size:30px;
+    cursor:pointer;
+    color:#d84315;
+}
+.modal h2{
+    text-align:center;
+    color:#004d40;
+    margin-bottom:15px;
+}
+.modal p{
+    font-size:15px;
+    line-height:1.7;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>🌾 Nutritional & Daily Use of Crops</h1>
+    <div class="crop-list" id="cropList"></div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="cropModal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2 id="modalName"></h2>
+        <p id="modalImportance"></p>
+        <p id="modalSeason"></p>
+        <p id="modalState"></p>
+    </div>
+</div>
+
+<script>
+const crops=[
+{
+ name:"Rice",
+ icon:"🍚",
+ importance:`Rice is one of the most important staple foods in India.
+It is rich in carbohydrates and provides instant energy.
+Rice is easy to digest and suitable for all age groups.
+It is used in daily meals such as rice, idli, dosa, and khichdi.
+Brown rice contains fiber and vitamins.
+Rice water improves digestion and gut health.
+It plays a role in religious rituals and festivals.
+Rice supports food security in India.
+It is gluten-free and safe for gluten intolerance.
+Rice forms the base of balanced diets.`,
+ season:"Kharif (June–October)",
+ state:"West Bengal, Assam, Uttar Pradesh"
+},
+{
+ name:"Wheat",
+ icon:"🌾",
+ importance:`Wheat is a major energy-providing crop.
+It contains carbohydrates, protein, and fiber.
+Wheat is used to make roti, chapati, and bread.
+Whole wheat supports digestion.
+It provides long-lasting energy.
+Wheat helps regulate blood sugar.
+It supports muscle growth.
+It contains essential minerals.
+Wheat is culturally important in North India.
+It is vital for food security.`,
+ season:"Rabi (October–March)",
+ state:"Punjab, Haryana, Uttar Pradesh"
+},
+{
+ name:"Maize",
+ icon:"🌽",
+ importance:`Maize is a nutritious cereal crop.
+It provides energy and dietary fiber.
+Maize improves digestion.
+It is consumed as corn, popcorn, and flour.
+Maize oil is used in cooking.
+It supports eye health.
+It is used as animal feed.
+Maize is affordable and versatile.
+It is used in food industries.
+It supports farmers’ income.`,
+ season:"Kharif and Rabi",
+ state:"Karnataka, Bihar, Maharashtra"
+},
+{
+ name:"Sugarcane",
+ icon:"🍬",
+ importance:`Sugarcane is the main source of sugar.
+It provides instant energy.
+Sugarcane juice prevents dehydration.
+It supports liver health.
+Jaggery improves iron levels.
+It aids digestion.
+Used in sweets and beverages.
+It supports rural employment.
+Important for agro-industries.
+Culturally important crop.`,
+ season:"Kharif",
+ state:"Uttar Pradesh, Maharashtra"
+},
+{
+ name:"Cotton",
+ icon:"🧵",
+ importance:`Cotton is an important non-food crop.
+It is used to make clothes.
+Cotton fabric is breathable.
+Cottonseed oil is edible.
+Supports textile industries.
+Provides employment.
+Used in medical supplies.
+Supports rural economy.
+Eco-friendly crop.
+Important in Indian culture.`,
+ season:"Kharif",
+ state:"Gujarat, Maharashtra, Telangana"
+}
+];
+
+const list=document.getElementById("cropList");
+crops.forEach((c,i)=>{
+ const div=document.createElement("div");
+ div.className="crop-card";
+ div.innerHTML=`
+   <div class="crop-icon">${c.icon}</div>
+   <h3>${c.name}</h3>
+   <p>Click to view details</p>`;
+ div.onclick=()=>openModal(i);
+ list.appendChild(div);
+});
+
+const modal=document.getElementById("cropModal");
+document.querySelector(".close").onclick=()=>modal.style.display="none";
+window.onclick=e=>{if(e.target==modal)modal.style.display="none";};
+
+function openModal(i){
+ const c=crops[i];
+ document.getElementById("modalName").innerText=c.name;
+ document.getElementById("modalImportance").innerText="Diet & Daily Use: "+c.importance;
+ document.getElementById("modalSeason").innerText="Growing Season: "+c.season;
+ document.getElementById("modalState").innerText="Major States: "+c.state;
+ modal.style.display="block";
+}
+</script>
+
+</body>
+</html>
